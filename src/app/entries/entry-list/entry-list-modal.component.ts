@@ -7,44 +7,50 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-entry-list-modal',
   templateUrl: './entry-list-modal.component.html',
   animations: [
-    trigger('isCollapsed', [
-      state('inactive', style({transform: 'translateY(0)'})),
-      transition('active => inactive', [
-        style({transform: 'translateY(-100%)'}),
-        animate(100)
-      ]),
-      transition('inactive => active', [
-        animate(100, style({transform: 'translateY(100%)'}))
-      ])
+    trigger('showModal', [
+      state('inactive', style({
+        display: 'block',
+        'z-index': 2,
+        color: 'blue',
+        // height: 0, 
+        // opacity: 0,
+        transform: 'translateY(100%)'
+      })),
+      state('active', style({
+        display: 'block',
+        'z-index': 2,
+        color: 'red',
+        // height: '100%', 
+        opacity: 1,
+        transform: 'translateY(-100%)'
+      })),
+      transition('inactive => active', animate('500ms ease-in')),
+      transition('active => inactive', animate('500ms ease-out'))
     ])
   ]
 })
 
 export class EntryListModal {
-  isCollapsed: string = 'inactive';
+  // isCollapsed: string = 'inactive';
+  modalShown: string = 'inactive';
   
-  constructor(private modalService: NgbModal) {}
+  //constructor(private modalService: NgbModal) {}
 
   toggleState() {
-    this.isCollapsed = (this.isCollapsed === "inactive") ? "active" : "inactive";
-    console.log(this.isCollapsed);
+    this.modalShown = (this.modalShown === 'inactive') ? 'active': 'inactive';
+    console.log(this.modalShown);
   }
 
-  open(content) {
-    this.modalService.open(content);
-    this.toggleState();
-    // .result.then((result) => {
-    //   this.toggleState();
-    //   console.log("result", result);
-    // }, (reason) => {
-    //   this.toggleState();
-    //   console.log("reason", reason);
-    // });
-  }
+  // open(content) {
+  //   this.modalService.open(content);
+  //   this.toggleState();
+  // }
 
   // d(reason){
-  //   this.activeModal.dismiss();
+  //   this.modalService.dismiss(content);
   //   this.toggleState();
   // }
 
 }
+
+
