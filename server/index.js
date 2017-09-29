@@ -13,6 +13,12 @@ const refreshRoutes = express.Router();
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// Add headers
+app.use((req, res, next) => { 
+    // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  next();
+});
 
 
 // ==================STATIC REQUESTS====================
@@ -21,6 +27,11 @@ refreshRoutes.use(express.static(path.resolve(__dirname, '../dist')));
 refreshRoutes.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
+// refreshRoutes.use(express.static(path.resolve(__dirname, '../src')));
+
+// refreshRoutes.get('*', function(request, response) {
+//   response.sendFile(path.resolve(__dirname, '../src/index.html'));
+// });
 
 
 // ===================API REQUESTS==========================

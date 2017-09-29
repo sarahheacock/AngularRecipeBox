@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Entry } from '../shared/entry.model';
+
 
 @Component({
     selector: 'app-entry',
@@ -7,5 +9,5 @@ import { Component } from '@angular/core';
 })
 
 export class EntryComponent {
-
+    @Input() entry: Entry;
 }
