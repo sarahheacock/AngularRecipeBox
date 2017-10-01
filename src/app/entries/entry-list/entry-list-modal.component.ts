@@ -6,23 +6,23 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-entry-list-modal',
   templateUrl: './entry-list-modal.component.html',
+  styleUrls: ['entry-list-modal.component.css'],
   animations: [
     trigger('showModal', [
       state('inactive', style({
-        display: 'block',
-        'z-index': 2,
-        color: 'blue',
-        // height: 0, 
-        // opacity: 0,
-        transform: 'translateY(100%)'
+        display: 'none',
+        position: 'fixed',
+        'z-index': 1,
+        //transform: 'translateY(100%)'
+        top: '-300px'
       })),
       state('active', style({
         display: 'block',
-        'z-index': 2,
-        color: 'red',
-        // height: '100%', 
-        opacity: 1,
-        transform: 'translateY(-100%)'
+        position: 'fixed',
+        'z-index': 1,
+        //transform: 'translateY(-100%)',
+        top: 0,
+        //'overflow-y': 'scroll'
       })),
       transition('inactive => active', animate('500ms ease-in')),
       transition('active => inactive', animate('500ms ease-out'))
