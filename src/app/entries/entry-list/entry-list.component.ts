@@ -9,7 +9,8 @@ import { Entry } from '../shared/entry.model';
 })
 
 export class EntryListComponent implements OnInit {
-    entries: Entry[];
+    entries: any;
+    keys: any[];
 
     constructor(private entryService: EntryService){
         console.log(this.entries);
@@ -18,7 +19,11 @@ export class EntryListComponent implements OnInit {
     ngOnInit(){
         this.entryService
             .getEntries()
-            .then(entries => this.entries = entries)
+            .then(entries => {
+                this.entries = entries.reduce((a, b) => {
+                    return a;
+                }, {});
+            })
 
     }
 }

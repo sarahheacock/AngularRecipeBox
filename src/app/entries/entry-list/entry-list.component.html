@@ -1,2 +1,13 @@
-<app-entry-list-modal></app-entry-list-modal>
-<app-entry *ngFor="let entry of entries" [entry]="entry"></app-entry>
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+    <ngb-panel *ngFor="let key of Object.keys(entries)" title="{{key}}">
+        <ng-template ngbPanelContent>
+            <div class="flex-container">
+                <app-entry *ngFor="let entry of entries[key]" [entry]="entry"></app-entry>
+            </div>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>
+
+
+
+

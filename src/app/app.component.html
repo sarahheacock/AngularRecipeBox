@@ -1,8 +1,15 @@
 <div class="container-fluid">
     <header>
-        <h1>Recipe Box</h1>
+        <div class="header-content">
+            <h1>Recipe Box</h1>
+            <!-- Button trigger modal -->
+            <app-modal-button></app-modal-button>
+        </div>
     </header>
-    <body class="main">
-        <router-outlet></router-outlet>
+    <body>
+        <app-modal></app-modal>
+        <div class="main">
+            <app-entry-list></app-entry-list>
+        </div>      
     </body>
 </div>

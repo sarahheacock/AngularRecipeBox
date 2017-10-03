@@ -1,5 +1,22 @@
-<div class="recipe">
-    <cl-image public-id="{{entry.pic}}">
-        <cl-transformation width="250" crop="fill" radius="10"></cl-transformation>
-    </cl-image>
-</div>
+<a href="#" (click)="changeState()" class="item">
+    <div class="recipe-content" [@expand]="contentShown" draggable="true">
+        <div class="text-center">
+            <cl-image public-id="{{entry.pic}}"  draggable="false">
+                <cl-transformation width="150" crop="fill" radius="10" ></cl-transformation>
+            </cl-image>
+            <h3>{{entry.title}}</h3>
+        </div>
+    
+        <div [@showContent]="contentShown" class="directions">
+            <hr />
+            <h4>Ingredients</h4>
+            <ol type="1">
+                <li *ngFor="let ingredient of entry.ingredients">{{ingredient}}</li>
+            </ol>
+            <br />
+            <h4>Directions</h4>
+            <p>{{entry.instructions}}</p>
+        </div>
+    </div>
+</a>
+

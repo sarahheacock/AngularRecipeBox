@@ -28,3 +28,22 @@ router.get('/recipes', (req, res) => {
 });
 
 module.exports = router;
+
+// data: {
+//   "Desserts" : [
+//     {
+//       title: "Pie",
+//       ingredients: ["sugar", "apples"],
+//       instructions: "bake it",
+//       pic: "ltvcyjbrqlmvjyplrvcc.jpg"
+//     }
+//   ],
+//   "Soup & Appetizers" : [
+//     {
+//       title: "Soup",
+//       ingredients: ["peas", "carrots"],
+//       instructions: "simmer it",
+//       pic: "ltvcyjbrqlmvjyplrvcc.jpg"
+//     }
+//   ]
+// }
