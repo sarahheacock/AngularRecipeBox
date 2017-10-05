@@ -1,22 +1,39 @@
 import { Entry } from './entry.model';
 import { Injectable, EventEmitter, Output } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
+
+// Import RxJs required methods
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class EntryService {
     @Output() onStateChange: EventEmitter<any> = new EventEmitter();
-    modalShown: string = 'inactive';
+    @Output() onContentChange: EventEmitter<any> = new EventEmitter();
+    modalShown: string = 'active';
+    modalContent: string = 'Loading';
 
     constructor(private http: Http){ }
     private url = "http://localhost:3000";
 
 
-    getEntries(): Promise<Entry[]> {
-        return this.http.get(`${this.url}/api/recipes`)
+    getEntries(): Promise<any[]> {
+        console.log("get");
+        return this.http.get(`${this.url}/api/scrape`)
             .toPromise()
-            .then(response => response.json().data as Entry[]);
+            .then(response => response.json().data as any[]);
+    }
+
+    changeContent(str){
+        this.modalContent = str;
+        this.onContentChange.emit(this.modalContent);
+        this.toggleState();
+    }
+
+    getContent(){
+        return this.onContentChange;
     }
 
     toggleState() {

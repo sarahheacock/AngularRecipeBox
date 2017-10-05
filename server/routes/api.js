@@ -1,7 +1,11 @@
 const express = require('express');
+const fs = require('fs');
 const router = express.Router();
 const request = require("request");
 const cheerio = require('cheerio');
+
+//const util = require('util');
+//var Promise = require('promise');
 
 const Box = require("../models/api").Box;
 const Recipe = require("../models/api").Recipe;
@@ -89,68 +93,130 @@ const output = (req, res, next) => {
 //get all recipes and boxes
 router.get('/', output);
 
-const getRecipe = (link) => {
-  
-};
 
 router.get('/scrape', (req, res, next) => {
+  fs.readFile("output.json", (err, data) => {
+    if(err) next();
+    else res.json(JSON.parse(data));
+  });
+}, (req, res, next) => {
   const url = "http://orangette.net/recipes/";
 
   request(url, (err, response, html) => {
     if(err) next(err);
     const $ = cheerio.load(html);
 
-    let result = []
-    $("option").each(function(){
+    let result = [];
+    
+    const div = $("option");
+    const length = div.length;
+
+    div.each(function(){
       const value = $(this).val();
       if(value.includes("course")) result.push(value);
     });
 
     req.links = result;
+    req.final = result.map((link) => {
+      const cat = link.split('/').reduce((a, b) => {
+        if(b !== "") return b;
+        else return a;
+      }, "");
+
+      return {
+        category: cap(cat),
+        recipes: []
+      };
+    });
     next();
   });
 
 }, (req, res, next) => {
-  let recipes = [];
 
-  for(let i = 0; i < req.links.length; i++){
-    const link = req.links[i];
-
-    request(link, (err, response, html) => {
-      const $ = cheerio.load(html); 
-      recipes[i] = [];
-
-      const div = $("main.content-left ul.grid-list li a");
-      const length = div.length;
-
-      div.each(function(j){
-        const value = $(this).attr('href');
-        console.log(j, value);
-        recipes[i].push(value);
-
-        if(recipes.length === req.links.length && recipes[i].length === length){
-          req.recipes = recipes;
-          next();
+  //const linkLength = req.links.length;
+  const getMore = (obj) => {
+    request(obj.href, (err, response, html) => {
+      if(err) next(err);
+      const $ = cheerio.load(html, {
+        xml: {
+          normalizeWhitespace: true,
         }
-      });
+      }); 
+      
+      obj.ingredients = $('div.ingredient').map(function() {
+        return $(this).text();
+      }).get();
+
+      obj.directions = $('div[itemprop="instructions"] p').map(function() {
+        return $(this).text();
+      }).get();
+
+      return obj;
     });
   }
 
-}, (req, res, next) => {
-  const final = req.links.map((link, i) => {
-    const cat = link.split('/').reduce((a, b) => {
-      if(b !== "") return b;
-      else return a;
-    }, "");
+  const func = (i, result) => {
+    console.log(result);
+    const link = req.links[i];
 
-    return {
-      category: cap(cat),
-      recipes: req.recipes[i]
-    };
-  });
+    request(link, (err, response, html) => {
+      if(err) next(err);
+      const $ = cheerio.load(html, {
+        xml: {
+          normalizeWhitespace: true,
+        }
+      }); 
 
-  res.json(final);
+      result[i]["recipes"] = $("main.content-left ul.grid-list li a").map(function(j){
+        let obj = {};
+
+        obj.href = $(this).attr('href');
+        obj.pic = $(this).children().first().attr('src');
+        obj.title = $(this).find("h3").text();
+
+
+        if(Object.keys(obj).length === 3 && obj.href){
+          getMore(obj);
+          return obj;
+        }
+      }).get();
+ 
+      if(i === req.final.length - 1 && result[i]["recipes"].length > 0){
+        const last = result[i]["recipes"];
+
+        const myFunc = () => {
+          const done = Array.isArray(last[last.length - 1]["directions"]);
+          if(!done){
+            setTimeout(myFunc, 1500);
+          } 
+          else{
+            fs.writeFile('output.json', JSON.stringify({
+              createdAt: new Date(),
+              data: result
+            }, null, 4), function(err){
+              if(err){
+                next(err);
+              }
+              else {
+                console.log('File successfully written! - Check your project directory for the output.json file');
+                res.send({data: result});
+              }
+            });
+          } 
+        }
+
+        myFunc();
+      } 
+      else if(result[i]["recipes"].length > 0){
+        func(i + 1, result);
+      }
+    });
+  };
+
+  func(0, req.final);
+
 });
+
 
 //create new recipe
 router.post('/:category', check, formatInput, (req, res, next) => {

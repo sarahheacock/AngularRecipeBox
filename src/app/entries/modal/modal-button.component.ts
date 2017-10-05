@@ -17,11 +17,7 @@ export class EntryListButton {
     constructor(private entryService: EntryService) {}
   
     stateChange() {
-        this.entryService.toggleState();
+        this.entryService.changeContent("Sign In");
         //this.onStateChange.emit(this.entryService.modalShown);
-    }
-
-    getState() {
-        //return this.onStateChange;
     }
 }

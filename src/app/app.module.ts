@@ -10,7 +10,7 @@ import { CloudinaryModule } from '@cloudinary/angular-4.x';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 
-import { EntryListComponent, EntryComponent, EntryService, EntryListModal, EntryListButton } from './entries';
+import { EntryListComponent, EntryComponent, EntryService, EntryListModal, EntryListButton, ContentModal } from './entries';
 
 const appRoutes: Routes = [
   {
@@ -41,7 +41,8 @@ const appRoutes: Routes = [
     EntryComponent,
     EntryListComponent,
     EntryListModal,
-    EntryListButton
+    EntryListButton,
+    ContentModal
   ],
   providers: [EntryService],
   bootstrap: [AppComponent]
