@@ -6,7 +6,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 
 // Get our API routes
-const api = require('./routes/api');
+const api = require('./server/routes/api');
 const app = express();
 const refreshRoutes = express.Router();
 
@@ -37,16 +37,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Add headers
 app.use((req, res, next) => { 
     // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.setHeader('Access-Control-Allow-Origin', 'https://angular-recipe-box.herokuapp.com/');
   next();
 });
 
 
 // ==================STATIC REQUESTS====================
-refreshRoutes.use(express.static(path.resolve(__dirname, '../dist')));
+refreshRoutes.use(express.static(path.resolve(__dirname, 'dist')));
 
 refreshRoutes.get('*', function(request, response) {
-  response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+  response.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
 // ===================SET UP ROUTES==========================
