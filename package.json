@@ -9,8 +9,8 @@
   "scripts": {
     "ng": "ng",
     "start": "set NODE_ENV=dev&&ng serve",
-    "build": "ng build && nodemon server",
     "postinstall": "ng build",
+    "build": "ng build",
     "test": "mocha --timeout 10000",
     "lint": "ng lint",
     "e2e": "ng e2e"
